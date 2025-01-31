@@ -80,7 +80,7 @@ app.on('ready', () => {
   // use flutter protocol to serve flutter web build, since it's not a standard protocol
   // vite won't remove it from the final build
   protocol.handle('flutter', async (req) => {
-    if (req.url !== 'flutter://flutter://flutter_bootstrap.js') {
+    if (req.url !== 'flutter://flutter_bootstrap.js') {
       return null;
     }
     const filePath = req.url.slice('flutter://'.length);

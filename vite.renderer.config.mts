@@ -51,7 +51,7 @@ function myPluginFlutterBuild(): PluginOption {
       const cpCommand =
         process.platform === 'win32'
           ? `xcopy ${path.normalize('build/web')} ${path.normalize(targetBuildPath)} /s /i /y`
-          : `cp -rf build/web/* ${targetBuildPath}`;
+          : `cp -r build/web/* ${targetBuildPath}`;
 
       // run build command
       await util.promisify(exec)(

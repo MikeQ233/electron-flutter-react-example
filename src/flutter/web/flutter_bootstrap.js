@@ -6,6 +6,7 @@
 const flutterApp = await new Promise((res) => {
   const config = {
     renderer: 'skwasm',
+    // renderer: 'canvaskit',
     canvasKitBaseUrl: './flutter/canvaskit/',
     entryPointBaseUrl: './flutter/',
     canvasKitVariant: 'chromium',

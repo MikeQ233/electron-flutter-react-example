@@ -1,57 +1,40 @@
 import 'dart:developer';
 import 'dart:js_interop';
+import 'package:my_app/component_apps/navigation_drawer.dart';
+import 'package:my_app/utils/web_util.dart';
 
 import 'package:flutter/material.dart';
+import 'package:my_app/config/app_config_notifier.dart';
+import 'package:my_app/config/theme_data.dart';
 import 'dart:ui_web';
 import 'package:my_app/multi_view_app.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runWidget(MultiViewApp(viewBuilder: (BuildContext context) {
     final int viewId = View.of(context).viewId;
     final initialData = views.getInitialData(viewId) as JSData;
-    print(initialData.viewName);
-    if (initialData.viewName == 'first') {
-      return const MyAppFirst();
+    print("flutter app: " + initialData.viewName);
+    Widget app;
+
+    if (initialData.viewName == 'app') {
+      app = const MyApp();
+    } else if (initialData.viewName == 'navigation') {
+      app = const NavigationDrawerApp();
     } else {
-      return const MyApp();
+      app = const MyApp();
     }
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppConfigNotifier()),
+      ],
+      child: app,
+    );
   }));
 }
 
 extension type JSData(JSObject _) implements JSObject {
   external String get viewName;
-}
-
-class MyAppFirst extends StatelessWidget {
-  const MyAppFirst({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    final int viewId = View.of(context).viewId;
-    return MaterialApp(
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -60,34 +43,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final int viewId = View.of(context).viewId;
-    return MaterialApp(
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return Consumer<AppConfigNotifier>(builder: (context, config, child) {
+      return MaterialApp(
+        onGenerateTitle:
+            restoreWebTitle, // flutter app will modify html title, so we need to restore it
+        theme: ThemeConfig.lightTheme,
+        darkTheme: ThemeConfig.darkTheme,
+        themeMode: config.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        home: const MyHomePage(),
+      );
+    });
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -97,8 +67,6 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
-  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -127,15 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+      appBar: null,
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.

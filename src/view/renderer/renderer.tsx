@@ -30,18 +30,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { flutterApp } from './flutter-bootstrap/bootstrap';
-import { FlutterComponent } from './flutter-bootstrap/FlutterComponent';
-
-console.log(flutterApp);
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-    <div className="w-screen h-[500px]">
-      <FlutterComponent viewName="first" tabIndex={0} />
-    </div>
   </StrictMode>,
 );
 

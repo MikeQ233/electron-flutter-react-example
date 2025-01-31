@@ -1,8 +1,0 @@
-{
-  "TaskApp": {
-    "name": "Task App",
-    "description": "A simple task app",
-    "icon": "",
-    "main": "lib/main.dart"
-  }
-}

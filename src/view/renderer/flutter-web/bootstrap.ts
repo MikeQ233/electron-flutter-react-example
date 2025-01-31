@@ -6,7 +6,10 @@ interface FlutterApp {
     initialData: Record<string, unknown>;
   }) => ViewID;
 
-  removeView: (viewId: ViewID) => void;
+  removeView: (viewId: ViewID) => {
+    hostElement: HTMLElement;
+    initialData: Record<string, unknown>;
+  };
 }
 
 let flutterApp: FlutterApp;

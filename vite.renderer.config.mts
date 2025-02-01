@@ -34,16 +34,19 @@ function myPluginFlutterBuild(): PluginOption {
 
     // need to override in closeBundle to copy flutter web build to build folder
     async closeBundle() {
-      const flutterRoot = path.join(
-        this.environment.config.root,
-        'src/flutter',
+      const flutterRoot = path.relative(
+        process.cwd(),
+        path.join(this.environment.config.root, 'src/flutter'),
       );
-      const targetBuildPath = path.resolve(
-        __dirname,
-        path.join(
-          this.environment.config.base,
-          this.environment.config.build.outDir,
-          'flutter',
+      const targetBuildPath = path.relative(
+        flutterRoot,
+        path.resolve(
+          __dirname,
+          path.join(
+            this.environment.config.base,
+            this.environment.config.build.outDir,
+            'flutter',
+          ),
         ),
       );
 
@@ -51,7 +54,7 @@ function myPluginFlutterBuild(): PluginOption {
       const cpCommand =
         process.platform === 'win32'
           ? `xcopy ${path.normalize('build/web')} ${path.normalize(targetBuildPath)} /s /i /y`
-          : `cp -r build/web/* ${targetBuildPath}`;
+          : `cp -r ${path.normalize('build/web/')} ${path.normalize(targetBuildPath)}`;
 
       // run build command
       await util.promisify(exec)(

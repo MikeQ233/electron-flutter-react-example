@@ -160,7 +160,7 @@ class _NavigationAppState extends State<_NavigationApp> {
         if (open != null && open) {
           _scaffoldKey.currentState!.openDrawer();
         } else {
-          _scaffoldKey.currentState!.openEndDrawer();
+          _scaffoldKey.currentState!.closeDrawer();
         }
       }
     });

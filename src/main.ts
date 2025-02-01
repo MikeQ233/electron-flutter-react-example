@@ -85,11 +85,12 @@ app.on('ready', () => {
     }
     const filePath = req.url.slice('flutter://'.length);
     const response = await net.fetch(
-      path.join(
-        __dirname,
-        `../renderer/${MAIN_WINDOW_VITE_NAME}/flutter`,
-        filePath,
-      ),
+      'file://' +
+        path.join(
+          __dirname,
+          `../renderer/${MAIN_WINDOW_VITE_NAME}/flutter`,
+          filePath,
+        ),
     );
     return response;
   });
